@@ -2,7 +2,7 @@
 package frc.robot;
 
 import java.sql.Driver;
-//hddfd
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.VictorSP;
@@ -46,7 +46,6 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() { // called repeatedly during autonomous
     long timePassed = System.currentTimeMillis() - this.autoStartTime; // find the difference of when auto started and
-                                                                       // now
 
     if (timePassed < 3000) { // drive forward for 3 seconds
       this.leftDrive1.set(-0.3);
@@ -95,22 +94,38 @@ public class Robot extends TimedRobot {
      * driverY = this.driver.getRawAxis(5); //match to the stick y axis
      */
     // xtreme 3d pro
+    /*
     boolean bumper = this.driver.getRawButton(1);
     boolean Turbo = this.driver.getRawButton(2);
     boolean Breaks = this.driver.getRawButton(12);
     boolean straight = this.driver.getRawButton(8);
+    */
     double driverX = -this.driver.getRawAxis(0); // match to the stick x axis
     double driverY = this.driver.getRawAxis(1); // match to the stick y axis
-    double slider = -((this.driver.getRawAxis(3) - 1) / 2);
-
+    //double slider = -((this.driver.getRawAxis(3) - 1) / 2);
+    double limiter = this.driver.getRawAxis(3); // 0 to 1
     // calculating our inputs
 
-    System.out.println(driverX);
-    System.out.println(driverY);
+    
 
     double leftOut = driverY + driverX;
     double rightOut = driverY - driverX;
 
+    if(leftOut > 0.75){
+      leftOut = 0.75;
+
+    }
+    if(rightOut > 0.75){
+      rightOut = 0.75;
+    }
+
+    leftOut = leftOut * limiter;
+    rightOut = rightOut * limiter;
+
+
+    System.out.println(leftOut);
+    System.out.println(rightOut);
+    /*
     if (bumper == true) {
 
       leftOut = leftOut * 0.6;
@@ -132,7 +147,7 @@ public class Robot extends TimedRobot {
       rightOut = rightOut * 0.75 * slider;
 
     }
-
+    */
     // setting the speed controllers
     this.leftDrive1.set(-leftOut);
     this.leftDrive2.set(-leftOut);
